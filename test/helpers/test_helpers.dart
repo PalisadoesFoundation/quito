@@ -13,7 +13,9 @@ import 'package:talawa/services/graphql_config.dart';
 import 'package:talawa/services/navigation_service.dart';
 import 'package:talawa/services/post_service.dart';
 import 'package:talawa/services/size_config.dart';
+import 'package:talawa/services/third_party_service/multi_media_pick_service.dart';
 import 'package:talawa/services/user_config.dart';
+import 'package:talawa/view_model/after_auth_view_models/add_post_view_models/add_post_view_model.dart';
 import 'package:talawa/view_model/after_auth_view_models/event_view_models/explore_events_view_model.dart';
 import 'package:talawa/view_model/after_auth_view_models/feed_view_models/organization_feed_view_model.dart';
 import 'package:talawa/view_model/after_auth_view_models/profile_view_models/profile_page_view_model.dart';
@@ -26,6 +28,7 @@ import 'test_helpers.mocks.dart';
   MockSpec<NavigationService>(returnNullOnMissingStub: true),
   MockSpec<GraphqlConfig>(returnNullOnMissingStub: true),
   MockSpec<PostService>(returnNullOnMissingStub: true),
+  MockSpec<MultiMediaPickerService>(returnNullOnMissingStub: true),
   MockSpec<EventService>(returnNullOnMissingStub: true),
   MockSpec<UserConfig>(returnNullOnMissingStub: true),
 ])
@@ -95,6 +98,13 @@ PostService getAndRegisterPostService() {
   return service;
 }
 
+MultiMediaPickerService getAndRegisterMultiMediaPickerService() {
+  _removeRegistrationIfExists<MultiMediaPickerService>();
+  final service = MockMultiMediaPickerService();
+  locator.registerSingleton<MultiMediaPickerService>(service);
+  return service;
+}
+
 EventService getAndRegisterEventService() {
   _removeRegistrationIfExists<EventService>();
   final service = MockEventService();
@@ -114,6 +124,7 @@ void registerServices() {
   getAndRegisterUserConfig();
   getAndRegisterPostService();
   getAndRegisterEventService();
+  getAndRegisterMultiMediaPickerService();
 }
 
 void unregisterServices() {
@@ -122,12 +133,14 @@ void unregisterServices() {
   locator.unregister<UserConfig>();
   locator.unregister<PostService>();
   locator.unregister<EventService>();
+  locator.unregister<MultiMediaPickerService>();
 }
 
 void registerViewModels() {
   locator.registerFactory(() => MainScreenViewModel());
   locator.registerFactory(() => OrganizationFeedViewModel());
   locator.registerFactory(() => ExploreEventsViewModel());
+  locator.registerFactory(() => AddPostViewModel());
   locator.registerFactory(() => ProfilePageViewModel());
   locator.registerFactory(() => LikeButtonViewModel());
   locator.registerFactory(() => SizeConfig());
@@ -137,6 +150,7 @@ void unregisterViewModels() {
   locator.unregister<MainScreenViewModel>();
   locator.unregister<OrganizationFeedViewModel>();
   locator.unregister<ExploreEventsViewModel>();
+  locator.unregister<AddPostViewModel>();
   locator.unregister<ProfilePageViewModel>();
   locator.unregister<LikeButtonViewModel>();
   locator.unregister<SizeConfig>();

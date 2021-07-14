@@ -73,6 +73,9 @@ class _IndividualPostViewState extends State<IndividualPostView> {
                 IndividualPostCommentSection(
                   comments: widget.post.comments!,
                   postID: widget.post.sId,
+                ),
+                const SizedBox(
+                  height: 200,
                 )
               ],
             ),

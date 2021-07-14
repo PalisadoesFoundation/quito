@@ -7,7 +7,9 @@ import 'package:talawa/services/graphql_config.dart';
 import 'package:talawa/services/navigation_service.dart';
 import 'package:talawa/services/post_service.dart';
 import 'package:talawa/services/size_config.dart';
+import 'package:talawa/services/third_party_service/multi_media_pick_service.dart';
 import 'package:talawa/services/user_config.dart';
+import 'package:talawa/view_model/after_auth_view_models/add_post_view_models/add_post_view_model.dart';
 import 'package:talawa/view_model/lang_view_model.dart';
 import 'package:talawa/utils/queries.dart';
 import 'package:talawa/view_model/after_auth_view_models/event_view_models/create_event_view_model.dart';
@@ -48,6 +50,7 @@ void setupLocator() {
   locator.registerLazySingleton(() => PostService());
   locator.registerLazySingleton(() => EventService());
   locator.registerLazySingleton(() => CommentService());
+  locator.registerLazySingleton(() => MultiMediaPickerService());
 
   //graphql
   locator.registerSingleton(GraphqlConfig());
@@ -73,6 +76,7 @@ void setupLocator() {
   locator.registerFactory(() => ProfilePageViewModel());
   locator.registerFactory(() => EditProfilePageViewModel());
   locator.registerFactory(() => CreateEventViewModel());
+  locator.registerFactory(() => AddPostViewModel());
 
   //Widgets viewModels
   locator.registerFactory(() => ProgressDialogViewModel());
