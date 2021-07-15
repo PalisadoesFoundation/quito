@@ -11,6 +11,7 @@ import 'package:talawa/services/navigation_service.dart';
 import 'package:talawa/splash_screen.dart';
 import 'package:talawa/view_model/lang_view_model.dart';
 import 'package:talawa/views/after_auth_screens/events/create_event_page.dart';
+import 'package:talawa/views/after_auth_screens/events/edit_event_page.dart';
 import 'package:talawa/views/after_auth_screens/events/event_info_page.dart';
 import 'package:talawa/views/after_auth_screens/events/explore_events.dart';
 import 'package:talawa/views/after_auth_screens/feed/individual_post.dart';
@@ -102,10 +103,13 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(
           builder: (context) => const ExploreEvents(key: Key('ExploreEvents')));
     case Routes.eventInfoPage:
-      final Event event = settings.arguments! as Event;
+      final Map<String, dynamic> args =
+          settings.arguments! as Map<String, dynamic>;
       return MaterialPageRoute(
-        builder: (context) =>
-            EventInfoPage(key: const Key('EventInfo'), event: event),
+        builder: (context) => EventInfoPage(
+          key: const Key('EventInfo'),
+          agrs: args,
+        ),
       );
     case Routes.createEventPage:
       return MaterialPageRoute(
@@ -123,6 +127,15 @@ Route<dynamic> generateRoute(RouteSettings settings) {
                 key: const Key('JoinOrganisationAfterAuth'),
                 orgId: id,
               ));
+    case Routes.editEventPage:
+      final Event event = settings.arguments! as Event;
+      return MaterialPageRoute(
+        builder: (context) => EditEventPage(
+          key: const Key('EditEvent'),
+          event: event,
+        ),
+      );
+
     default:
       return MaterialPageRoute(
           builder: (context) => const DemoPageView(

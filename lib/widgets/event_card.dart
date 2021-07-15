@@ -55,7 +55,7 @@ class EventCard extends StatelessWidget {
                             size: 13,
                           ),
                           SizedBox(
-                            width: SizeConfig.screenWidth! * 0.027,
+                            width: SizeConfig.screenWidth! * 0.025,
                           ),
                           Text(
                             "${event.startDate!} - ${event.endDate!}",

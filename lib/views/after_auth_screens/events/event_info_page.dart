@@ -4,12 +4,13 @@ import 'package:talawa/locator.dart';
 import 'package:talawa/models/events/event_model.dart';
 import 'package:talawa/services/size_config.dart';
 import 'package:talawa/utils/app_localization.dart';
+import 'package:talawa/view_model/after_auth_view_models/event_view_models/explore_events_view_model.dart';
 import 'package:talawa/widgets/custom_list_tile.dart';
+import 'package:talawa/widgets/event_admin_fab.dart';
 
 class EventInfoPage extends StatefulWidget {
-  const EventInfoPage({Key? key, required this.event}) : super(key: key);
-  final Event event;
-
+  const EventInfoPage({Key? key, required this.agrs}) : super(key: key);
+  final Map<String, dynamic> agrs;
   @override
   _EventInfoPageState createState() => _EventInfoPageState();
 }
@@ -17,6 +18,7 @@ class EventInfoPage extends StatefulWidget {
 class _EventInfoPageState extends State<EventInfoPage> {
   @override
   Widget build(BuildContext context) {
+    final Event event = widget.agrs["event"] as Event;
     return Scaffold(
       body: CustomScrollView(
         slivers: [
@@ -32,24 +34,28 @@ class _EventInfoPageState extends State<EventInfoPage> {
               ),
             ),
           ),
-          _eventInfoBody()
+          _eventInfoBody(event)
         ],
       ),
-      floatingActionButton: FloatingActionButton.extended(
-          onPressed: () {
-            //EventService().registerForAnEvent(widget.event.id!);
-          },
-          label: Text(
-            AppLocalizations.of(context)!.strictTranslate("Register"),
-            style: Theme.of(context)
-                .textTheme
-                .bodyText2!
-                .copyWith(color: Theme.of(context).accentColor),
-          )),
+      floatingActionButton: event.creator!.id != userConfig.currentUser.id
+          ? FloatingActionButton.extended(
+              onPressed: () {},
+              label: Text(
+                "Register",
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyText2!
+                    .copyWith(color: Theme.of(context).accentColor),
+              ))
+          : eventAdminFab(
+              context: context,
+              event: event,
+              exploreEventsViewModel: widget.agrs["exploreEventViewModel"]
+                  as ExploreEventsViewModel),
     );
   }
 
-  Widget _eventInfoBody() {
+  Widget _eventInfoBody(Event event) {
     return SliverToBoxAdapter(
       child: Padding(
         padding: const EdgeInsets.all(10),
@@ -60,7 +66,7 @@ class _EventInfoPageState extends State<EventInfoPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  widget.event.title!,
+                  event.title!,
                   style: Theme.of(context)
                       .textTheme
                       .headline4!
@@ -71,9 +77,9 @@ class _EventInfoPageState extends State<EventInfoPage> {
             ),
             Row(
               children: [
-                widget.event.creator!.firstName != null
+                event.creator!.firstName != null
                     ? Text(
-                        "${AppLocalizations.of(context)!.strictTranslate("Created by")}: ${widget.event.creator!.firstName} ${widget.event.creator!.lastName}",
+                        "${AppLocalizations.of(context)!.strictTranslate("Created by")}: ${event.creator!.firstName} ${event.creator!.lastName}",
                         style: Theme.of(context)
                             .textTheme
                             .bodyText2!
@@ -102,11 +108,11 @@ class _EventInfoPageState extends State<EventInfoPage> {
                   width: SizeConfig.screenWidth! * 0.027,
                 ),
                 Text(
-                  "${widget.event.startDate!} - ${widget.event.endDate!}",
+                  "${event.startDate!} - ${event.endDate!}",
                   style: Theme.of(context).textTheme.caption,
                 ),
                 const Spacer(),
-                widget.event.isPublic!
+                event.isPublic!
                     ? Icon(
                         Icons.lock_open,
                         size: 13,
@@ -120,7 +126,7 @@ class _EventInfoPageState extends State<EventInfoPage> {
                 SizedBox(
                   width: SizeConfig.screenWidth! * 0.027,
                 ),
-                widget.event.isPublic!
+                event.isPublic!
                     ? Text(
                         AppLocalizations.of(context)!.strictTranslate('public'),
                         style: Theme.of(context).textTheme.caption,
@@ -146,7 +152,7 @@ class _EventInfoPageState extends State<EventInfoPage> {
                   width: SizeConfig.screenWidth! * 0.025,
                 ),
                 Text(
-                  "${widget.event.startTime!} - ${widget.event.endTime!}",
+                  "${event.startTime!} - ${event.endTime!}",
                   style: Theme.of(context).textTheme.caption,
                 ),
               ],
@@ -167,7 +173,7 @@ class _EventInfoPageState extends State<EventInfoPage> {
                 SizedBox(
                   width: SizeConfig.screenWidth! * 0.88,
                   child: Text(
-                    widget.event.location!,
+                    event.location!,
                     style: Theme.of(context).textTheme.caption,
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.left,
@@ -188,7 +194,7 @@ class _EventInfoPageState extends State<EventInfoPage> {
             ),
             SizedBox(width: SizeConfig.screenWidth! * 0.013),
             Text(
-              widget.event.description!,
+              event.description!,
               style: Theme.of(context).textTheme.caption,
             ),
             SizedBox(height: SizeConfig.screenHeight! * 0.013),
